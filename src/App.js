@@ -1,26 +1,34 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { Provider } from 'react-redux'
+import store from './store'
+import { loadUser } from './actions/authActions'
+import { Container } from 'reactstrap'
+import LoginForm from './components/auth/loginForm'
+// import IndexNavbar from './components/IndexNavbar'
+import { BrowserRouter as Router, Route } from 'react-router-dom'
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends React.Component {
+
+  componentDidMount() {
+    store.dispatch(loadUser())
+  }
+
+  render() {
+    return (
+      <Router>
+        <Provider store={store}>
+          {/* <IndexNavbar /> */}
+          <Container>
+            <LoginForm />
+            {/* <Route path="/:id/:postid" exact component={PostDetail} />
+            <Route path="/search/user/posts/" exact component={SearchPost} />
+            <Route path="/:id" exact component={UserPosts} />
+            <Route path="/" exact component={UserList} /> */}
+          </Container>
+        </Provider>
+      </Router>
+    )
+  }
 }
 
 export default App;
