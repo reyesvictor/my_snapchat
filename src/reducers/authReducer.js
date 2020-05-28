@@ -16,7 +16,7 @@ const initialState = {
     user: null
 }
 
-export default function(state = initialState, action) {
+export default function (state = initialState, action) {
     switch (action.type) {
         case USER_LOADING:
             return {
@@ -24,26 +24,27 @@ export default function(state = initialState, action) {
                 isLoading: true
             }
         case USER_LOADED:
+            console.log(action.payload)
             return {
                 ...state,
                 isAuthenticated: true,
                 isLoading: false,
-                user: action.payload.data
+                user: action.payload
             }
         case LOGIN_SUCCESS:
-        case REGISTER_SUCCESS:
-            localStorage.setItem('token', action.payload.data.token)
+            localStorage.setItem('auth', JSON.stringify({ email: action.payload.data.email, token: action.payload.data.token }))
             return {
                 ...state,
-                ...action.payload,
+                user: action.payload.data,
                 isAuthenticated: true,
                 isLoading: false
             }
+        case REGISTER_SUCCESS:
         case AUTH_ERROR:
         case LOGIN_FAIL:
         case LOGOUT_SUCCESS:
         case REGISTER_FAIL:
-            localStorage.removeItem('token')
+            localStorage.removeItem('auth')
             return {
                 ...state,
                 token: null,

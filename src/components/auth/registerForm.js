@@ -4,10 +4,10 @@ import {
 } from 'reactstrap'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
-import { login } from '../../actions/authActions'
+import { register } from '../../actions/authActions'
 import { clearErrors } from '../../actions/errorActions'
 
-class LoginModal extends Component {
+class RegisterModal extends Component {
     state = {
         modal: false,
         email: '',
@@ -18,7 +18,7 @@ class LoginModal extends Component {
     static propTypes = {
         isAuthenticated: PropTypes.bool,
         error: PropTypes.object.isRequired,
-        login: PropTypes.func.isRequired,
+        register: PropTypes.func.isRequired,
         clearErrors: PropTypes.func.isRequired
     }
 
@@ -27,7 +27,7 @@ class LoginModal extends Component {
         const { error, isAuthenticated } = this.props
 
         if (error !== prevProps.error) {
-            if (error.id === 'LOGIN_FAIL') {
+            if (error.id === 'REGISTER_FAIL') {
                 // in redux, you can see on the tree that it's MSG > MSG: "VALUE" that;s why it's double msg
                 this.setState({ msg: error.msg })
             }
@@ -60,12 +60,14 @@ class LoginModal extends Component {
 
         const { email, password } = this.state
 
+        //creates the user from the form data
         const user = {
             email,
             password
         }
 
-        this.props.login(user)
+        // gonna try and register
+        this.props.register(user)
     }
 
     render() {
@@ -73,21 +75,21 @@ class LoginModal extends Component {
             <div>
                 <NavLink
                     style={{
-                        background: '#e7314c',
+                        background: '#1b94f6',
                         color: 'white',
-                        position: 'fixed',
-                        bottom: 15 + 'vh',
+                        position:'fixed',
+                        bottom: 0,
                         width: 100 + 'vw',
                         height: 15 + 'vh',
                         fontSize: 10 + 'vw',
-                        lineHeight: 12 + 'vh',
-                        textAlign: 'center',
+                        lineHeight: 12 + 'vh', 
+                        textAlign: 'center', 
                     }}
                     onClick={this.toggle} href="#">
-                    LOG IN
+                    SIGN UP
                 </NavLink>
                 <Modal isOpen={this.state.modal} toggle={this.toggle}>
-                    <ModalHeader toggle={this.toggle}>Log in !</ModalHeader>
+                    <ModalHeader toggle={this.toggle}>Register!</ModalHeader>
                     <ModalBody>
                         {this.state.msg ? <Alert> {this.state.msg}</Alert> : null}
                         <Form onSubmit={this.onSubmit}>
@@ -109,7 +111,7 @@ class LoginModal extends Component {
                                     onChange={this.onChange}
                                 />
                                 <Button color="dark" className="mt-4" block>
-                                    Login
+                                    Register
                                 </Button>
                             </FormGroup>
                         </Form>
@@ -127,5 +129,5 @@ const mapStateToProps = state => ({
 
 export default connect(
     mapStateToProps,
-    { login, clearErrors }
-)(LoginModal)
+    { register, clearErrors }
+)(RegisterModal)

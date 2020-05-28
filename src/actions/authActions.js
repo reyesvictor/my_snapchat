@@ -25,8 +25,19 @@ export const loadUser = () => (dispatch, getState) => {
     // loading user
     dispatch({ type: USER_LOADING })
 
-    if (true) {
-        dispatch({ type: AUTH_ERROR })
+    if (localStorage.getItem('auth')) {
+        dispatch({
+            type: USER_LOADED,
+            // res.data is an object with user object and the token
+            payload: JSON.parse(localStorage.getItem('auth'))
+        })
+        console.log("The token exists")
+    }
+    else {
+        dispatch({
+            type: AUTH_ERROR
+        })
+        console.log("The token does not exist")
     }
     // if token and email are in the state, it means the user has already logged in
     // if (token in state)
@@ -51,38 +62,37 @@ export const login = ({ email, password }) => dispatch => {
             payload: res.data
         }))
         .catch(err => {
-            console.log(err)
-            // dispatch(returnErrors(err.response.data, err.response.status, 'LOGIN_FAIL'))
+            dispatch(returnErrors(err.response.data, err.response.status, 'LOGIN_FAIL'))
             dispatch({
                 type: LOGIN_FAIL
             })
         })
 }
 
-// // Register User
-// export const register = ({ username, email, password }) => dispatch => {
-//     // headers 
-//     const config = {
-//         headers: {
-//             "Content-type": "application/json"
-//         }
-//     }
+// Register User
+export const register = ({ email, password }) => dispatch => {
+    // headers 
+    const config = {
+        headers: {
+            "Content-type": "application/json"
+        }
+    }
 
-//     //request info
-//     const body = JSON.stringify({ username, email, password })
+    //request info
+    const body = JSON.stringify({ email, password })
 
-//     axios.post('http://127.0.0.1:8000/api/users', body, config)
-//         .then(res => dispatch({
-//             type: REGISTER_SUCCESS,
-//             payload: res.data
-//         }))
-//         .catch(err => {
-//             dispatch(returnErrors(err.response.data, err.response.status, 'REGISTER_FAIL'))
-//             dispatch({
-//                 type: REGISTER_FAIL
-//             })
-//         })
-// }
+    axios.post('http://snapi.epitech.eu/inscription', body, config)
+        .then(res => dispatch({
+            type: REGISTER_SUCCESS,
+            payload: res.data
+        }))
+        .catch(err => {
+            dispatch(returnErrors(err.response.data, err.response.status, 'REGISTER_FAIL'))
+            dispatch({
+                type: REGISTER_FAIL
+            })
+        })
+}
 
 // // setup function for token/headers
 // export const tokenConfig = getState => {
@@ -103,9 +113,9 @@ export const login = ({ email, password }) => dispatch => {
 //     return config
 // }
 
-// //logout no need for dispatch
-// export const logout = () => {
-//     return {
-//         type: LOGOUT_SUCCESS
-//     }
-// }
+//logout no need for dispatch
+export const logout = () => {
+    return {
+        type: LOGOUT_SUCCESS
+    }
+}
