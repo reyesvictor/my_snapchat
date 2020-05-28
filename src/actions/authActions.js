@@ -56,7 +56,7 @@ export const login = ({ email, password }) => dispatch => {
     //request info
     const body = JSON.stringify({ email, password })
 
-    axios.post('http://snapi.epitech.eu/connection', body, config)
+    axios.post('https://snapi.epitech.eu/connection', body, config)
         .then(res => dispatch({
             type: LOGIN_SUCCESS,
             payload: res.data
@@ -81,7 +81,7 @@ export const register = ({ email, password }) => dispatch => {
     //request info
     const body = JSON.stringify({ email, password })
 
-    axios.post('http://snapi.epitech.eu/inscription', body, config)
+    axios.post('https://snapi.epitech.eu/inscription', body, config)
         .then(res => dispatch({
             type: REGISTER_SUCCESS,
             payload: res.data

@@ -27,7 +27,7 @@ class userList extends React.Component {
     }
 
 
-    axios.get('http://snapi.epitech.eu/all', config)
+    axios.get('https://snapi.epitech.eu/all', config)
       .then(res => {
         this.setState({ users: res.data.data, userResult: res.data.data })
       })
