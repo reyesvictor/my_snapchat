@@ -1,0 +1,36 @@
+import React, { useState } from 'react';
+import Camera from 'react-html5-camera-photo';
+import 'react-html5-camera-photo/build/css/index.css';
+import UserList from './user/userList'
+
+import ImagePreview from './ImagePreview'; // source code : ./src/demo/AppWithImagePreview/ImagePreview
+
+function Cam(props) {
+  const [dataUri, setDataUri] = useState('');
+
+  function handleTakePhotoAnimationDone(dataUri) {
+    console.log('takePhoto');
+    setDataUri(dataUri);
+  }
+
+  const isFullscreen = false;
+  return (
+    <div>
+      {
+        (dataUri)
+          ?
+          <>
+            <ImagePreview dataUri={dataUri}
+              isFullscreen={isFullscreen}
+            />
+            <UserList />
+          </>
+          : <Camera onTakePhotoAnimationDone={handleTakePhotoAnimationDone}
+            isFullscreen={isFullscreen}
+          />
+      }
+    </div>
+  );
+}
+
+export default Cam;
