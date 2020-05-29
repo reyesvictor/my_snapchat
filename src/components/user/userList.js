@@ -19,6 +19,8 @@ class userList extends React.Component {
   }
 
   componentDidMount() {
+    console.log(this.props)
+
     //get user list from API
     const config = {
       headers: {

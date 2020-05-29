@@ -4,8 +4,6 @@ import 'react-html5-camera-photo/build/css/index.css'
 import UserList from './user/userList'
 import { Redirect, Route } from 'react-router-dom'
 import Profile from './Profile'
-
-
 import ImagePreview from './ImagePreview' // source code : ./src/demo/AppWithImagePreview/ImagePreview
 
 function Cam(props) {

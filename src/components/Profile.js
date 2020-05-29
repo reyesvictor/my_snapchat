@@ -10,12 +10,14 @@ import { loadUser } from '../actions/authActions'
 import { ReactComponent as SnapLogo } from './logo_snap.svg'
 import { Button } from 'reactstrap'
 import Cam from './Camera'
+import Local from './user/pickFile'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.min.css'
 
 class Profile extends React.Component {
   state = {
-    cam: false
+    cam: false,
+    local: false
   }
 
   customToastId = 'xxx-yyy'
@@ -44,40 +46,57 @@ class Profile extends React.Component {
     })
   }
 
+  local = () => {
+    this.setState({
+      local: !this.state.local
+    })
+  }
+
   render() {
     const { user, isAuthenticated, isLoading } = this.props.auth
     return (
       <>
         <ToastContainer />
         {
-          this.state.cam ?
-            <Cam />
+          this.state.local ?
+            <Local />
             :
-            <div
-              style={{
-                background: 'white',
-                height: 100 + 'vh',
-              }}>
-              <Logout />
-              <hr />
-              <div style={{ height: 2 + '%' }}>===> New Message From Antonio</div>
-              <hr />
-              <div style={{ height: 2 + '%' }}>===> New Message From Antonio</div>
-              <hr />
-              <div style={{ height: 2 + '%' }}>===> New Message From Antonio</div>
-              <hr />
-              <div style={{ height: 2 + '%' }}>===> New Message From Antonio</div>
-              <hr />
+            this.state.cam ?
+              <Cam />
+              :
+              <div
+                style={{
+                  background: 'white',
+                  height: 100 + 'vh',
+                }}>
+                <Logout />
+                <hr />
+                <div style={{ height: 2 + '%' }}>===> New Message From Antonio</div>
+                <hr />
+                <div style={{ height: 2 + '%' }}>===> New Message From Antonio</div>
+                <hr />
+                <div style={{ height: 2 + '%' }}>===> New Message From Antonio</div>
+                <hr />
+                <div style={{ height: 2 + '%' }}>===> New Message From Antonio</div>
+                <hr />
 
-              <button style={{
-                borderRadius: 100 + '%',
-                position: 'fixed',
-                bottom: 1,
-                right: 1,
-              }}
-                onClick={this.cam}
-              >O</button>
-            </div>
+                <button style={{
+                  borderRadius: 100 + '%',
+                  // position: 'fixed',
+                  bottom: 1,
+                  right: 1,
+                }}
+                  onClick={this.cam}
+                >O</button>
+
+                <button style={{
+                  borderRadius: 100 + '%',
+                  bottom: 1,
+                  right: 1,
+                }}
+                  onClick={this.local}
+                >Local</button>
+              </div>
         }
       </>
     )
