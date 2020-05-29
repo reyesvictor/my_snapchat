@@ -19,7 +19,9 @@ class Profile extends React.Component {
   state = {
     cam: false,
     local: false,
-    snaps: []
+    snaps: [],
+    snap_showing: false,
+    imagedata: '',
   }
 
   customToastId = 'xxx-yyy'
@@ -41,7 +43,8 @@ class Profile extends React.Component {
     }
     axios.get('http://snapi.epitech.eu/snaps', config)
       .then(res => {
-        this.setState({ snaps: res.data.data })
+        const snaps_temp = res.data.data
+        this.setState({ snaps: snaps_temp.reverse() })
       })
       .catch(err => {
         toast.error('Error getting all snaps')
@@ -77,18 +80,71 @@ class Profile extends React.Component {
     const snap_id = e.target.getAttribute('value')
     const config = {
       headers: {
+        'Content-Type': 'application/octet-stream',
         "token": this.props.auth.user.token
       }
     }
+
+
+    const duration = this.state.snaps.filter(snap => snap.snap_id == snap_id)[0].duration
+    console.log('duration', duration)
+
     axios.get(`http://snapi.epitech.eu/snap/${snap_id}`, config)
-      .then(res => {
-        console.log(res.data)
-        this.setState({ snaps: res.data.data })
+    // .then((response) => response.data.blob())
+    .then((res) => {
+
+      const url = window.URL.createObjectURL(new Blob([res.data]));
+      this.setState({imagedata:url })
+      // console.log(url)
+      // document.getElementById('img').src = url;
+
+
+        // var nuroImage = new Image;
+        // var request = new XMLHttpRequest();
+        // request.responseType = "blob";
+        // request.onload = function () {
+        //   nuroImage.src = URL.createObjectURL(res.data)
+        // }
+        // request.open("GET", "/path/to/image/file");
+        // request.send();
+
+
+        //afficher l'image
+        //    <img ng-src="data:image/*;base64,{{Raw Binary Data}}"/>
+
+        this.setState({ snap_showing: true })
+        const timer = setTimeout(() => {
+          console.log('This will run after 1 second!')
+          this.setState({ snap_showing: false, imagedata: res.data })
+        }, duration * 1000);
+        return () => clearTimeout(timer);
       })
-      .catch(err => {
+      .catch(async err => {
         //disconnect user
         // dispatch()
-        toast.error('Error getting all snaps')
+        toast.error('Error getting this snap')
+        console.log(err)
+        // await this.setState({ snap_showing: false })
+      })
+  }
+
+
+  showSeen = (id) => {
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        "token": this.props.auth.user.token
+      }
+    }
+    const body = { id: id }
+
+    axios.post('http://snapi.epitech.eu/seen', body, config)
+      .then(res => {
+        console.log(res)
+        toast.success(res.data.data)
+      })
+      .catch(err => {
+        toast.error('didnt mark as seen')
         console.log(err)
       })
   }
@@ -98,7 +154,7 @@ class Profile extends React.Component {
     return (
       <>
         <ToastContainer />
-        {
+        {!this.state.snap_showing ?
           this.state.local ?
             <Local />
             :
@@ -113,9 +169,9 @@ class Profile extends React.Component {
                 <Logout />
                 <hr />
                 {this.state.snaps.map(snap => {
-                 return <>
+                  return <>
                     <div
-                    onClick={e => this.showSnap(e)}
+                      onClick={e => this.showSnap(e)}
                       value={snap.snap_id}
                       style={{ height: 2 + '%' }}
                     >===> {snap.from}</div>
@@ -139,6 +195,8 @@ class Profile extends React.Component {
                   onClick={this.local}
                 >Local</button>
               </div>
+          :
+          <img src={this.state.imagedata} />
         }
       </>
     )
