@@ -15,7 +15,7 @@ class userList extends React.Component {
   state = {
     users: [],
     userResult: [],
-    userSearch: ''
+    userSearch: '',
   }
 
   componentDidMount() {
@@ -26,21 +26,48 @@ class userList extends React.Component {
       }
     }
 
-
-    axios.get('https://snapi.epitech.eu/all', config)
+    axios.get('http://snapi.epitech.eu/all', config)
       .then(res => {
         this.setState({ users: res.data.data, userResult: res.data.data })
       })
   }
 
-  onChange = e => {
-    this.setState({ [e.target.name]: e.target.value })
-    let userRes = this.state.users.filter(user => user.email.match(this.state.userSearch))
+  onChange = async e => {
+    await this.setState({ [e.target.name]: e.target.value })
+    let userRes
+    if (this.state.userSearch == '') {
+      userRes = this.state.users
+    } else {
+      userRes = this.state.users.filter(user => user.email.match(this.state.userSearch))
+    }
     this.setState({ userResult: userRes })
   }
 
   static propTypes = {
     auth: PropTypes.object.isRequired
+  }
+
+  onSend = (email) => {    
+
+    console.log(email)
+
+    const config = {
+      headers: {
+        "Content-Type": "multipart/form-data",
+        "token": this.props.auth.user.token
+      }
+    }
+
+    const body = {
+      "duration": 5,
+      "to": email,
+      "image": this.props.dataUri
+    }
+
+    axios.post('http://snapi.epitech.eu/snap', body, config)
+      .then(res => {
+        this.setState({ users: res.data.data, userResult: res.data.data })
+      })
   }
 
   render() {
@@ -61,7 +88,10 @@ class userList extends React.Component {
         {this.state.userResult.map(({ email }) =>
           <>
             <hr key={email + 'hr'} />
-            <Container key={email + 'div'} onClick={null}>{email}</Container>
+            {/* Choose user */}
+            <Container
+              value={email}
+              onClick={ e => this.onSend(e.target.innerHTML) }>{email}</Container>
           </>
         )}
       </>

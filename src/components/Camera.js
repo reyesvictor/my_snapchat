@@ -20,13 +20,30 @@ function Cam(props) {
         (dataUri)
           ?
           <>
-            <ImagePreview dataUri={dataUri}
-              isFullscreen={isFullscreen}
-            />
-            <UserList />
+            <div
+              style={{
+                margin: 'auto',
+                width: 100 + 'vw',
+                overflowY: 'scroll',
+                border: '1px solid grey',
+                float: 'left',
+                height: '500px',
+                position: 'relative'
+              }}
+            >
+              <ImagePreview dataUri={dataUri}
+                isFullscreen={isFullscreen}
+                isFullscreen={true}
+              />
+            </div>
+            {/* Acces a l'image dans la UserList pour l'envoyer */}
+            <UserList dataUri={dataUri} />
           </>
-          : <Camera onTakePhotoAnimationDone={handleTakePhotoAnimationDone}
+          :
+          <Camera
+            onTakePhotoAnimationDone={handleTakePhotoAnimationDone}
             isFullscreen={isFullscreen}
+            isFullscreen={true}
           />
       }
     </div>
