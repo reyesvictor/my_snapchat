@@ -1,19 +1,28 @@
-import React, { useState } from 'react';
-import Camera from 'react-html5-camera-photo';
-import 'react-html5-camera-photo/build/css/index.css';
+import React, { useState } from 'react'
+import Camera from 'react-html5-camera-photo'
+import 'react-html5-camera-photo/build/css/index.css'
 import UserList from './user/userList'
+import { Redirect, Route } from 'react-router-dom'
+import Profile from './Profile'
 
-import ImagePreview from './ImagePreview'; // source code : ./src/demo/AppWithImagePreview/ImagePreview
+
+import ImagePreview from './ImagePreview' // source code : ./src/demo/AppWithImagePreview/ImagePreview
 
 function Cam(props) {
-  const [dataUri, setDataUri] = useState('');
+  const [dataUri, setDataUri] = useState('')
+  const [camError, setCamError] = useState('')
 
   function handleTakePhotoAnimationDone(dataUri) {
-    console.log('takePhoto');
-    setDataUri(dataUri);
+    console.log('takePhoto')
+    setDataUri(dataUri)
   }
 
-  const isFullscreen = false;
+  function handleCameraError(error) {
+    setCamError(error)
+    // console.log('This is my error handleCameraError', error)
+  }
+
+  const isFullscreen = false
   return (
     <div>
       {
@@ -40,14 +49,19 @@ function Cam(props) {
             <UserList dataUri={dataUri} />
           </>
           :
-          <Camera
-            onTakePhotoAnimationDone={handleTakePhotoAnimationDone}
-            isFullscreen={isFullscreen}
-            isFullscreen={true}
-          />
+          (camError)
+            ?
+            <Profile error={camError}/>
+            :
+            <Camera
+              onCameraError={(error) => { return handleCameraError(error) }}
+              onTakePhotoAnimationDone={handleTakePhotoAnimationDone}
+              isFullscreen={isFullscreen}
+              isFullscreen={true}
+            />
       }
     </div>
-  );
+  )
 }
 
-export default Cam;
+export default Cam

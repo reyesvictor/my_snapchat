@@ -10,14 +10,28 @@ import { loadUser } from '../actions/authActions'
 import { ReactComponent as SnapLogo } from './logo_snap.svg'
 import { Button } from 'reactstrap'
 import Cam from './Camera'
+import { ToastContainer, toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.min.css'
 
 class Profile extends React.Component {
   state = {
     cam: false
   }
 
+  customToastId = 'xxx-yyy'
+
+
   componentDidMount() {
     store.dispatch(loadUser())
+    toast.dismiss()
+    this.camError()
+  }
+  camError = () => {
+    if (this.props.error && !toast.isActive(this.customToastId)) {
+      toast.error("There was an issue with your camera", {
+        toastId: this.customToastId
+      })
+    }
   }
 
   static propTypes = {
@@ -34,6 +48,7 @@ class Profile extends React.Component {
     const { user, isAuthenticated, isLoading } = this.props.auth
     return (
       <>
+        <ToastContainer />
         {
           this.state.cam ?
             <Cam />
