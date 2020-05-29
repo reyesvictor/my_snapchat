@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'
 import { Provider } from 'react-redux'
 import { Container } from 'reactstrap'
 import Logout from './auth/logout'
@@ -22,6 +22,7 @@ class Profile extends React.Component {
     snaps: [],
     snap_showing: false,
     imagedata: '',
+    timeleft: 0,
   }
 
   customToastId = 'xxx-yyy'
@@ -78,58 +79,49 @@ class Profile extends React.Component {
 
   showSnap = (e) => {
     const snap_id = e.target.getAttribute('value')
-    const config = {
-      headers: {
-        'Content-Type': 'application/octet-stream',
-        "token": this.props.auth.user.token
-      }
-    }
-
 
     const duration = this.state.snaps.filter(snap => snap.snap_id == snap_id)[0].duration
     console.log('duration', duration)
 
-    axios.get(`http://snapi.epitech.eu/snap/${snap_id}`, config)
-    // .then((response) => response.data.blob())
-    .then((res) => {
+    fetch(`http://snapi.epitech.eu/snap/${snap_id}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/octet-stream',
+        'token': this.props.auth.user.token
+      },
+    })
+      .then((response) => response.blob())
+      .then((blob) => {
 
-      const url = window.URL.createObjectURL(new Blob([res.data]));
-      this.setState({imagedata:url })
-      // console.log(url)
-      // document.getElementById('img').src = url;
+        const url = window.URL.createObjectURL(new Blob([blob]))
 
-
-        // var nuroImage = new Image;
-        // var request = new XMLHttpRequest();
-        // request.responseType = "blob";
-        // request.onload = function () {
-        //   nuroImage.src = URL.createObjectURL(res.data)
-        // }
-        // request.open("GET", "/path/to/image/file");
-        // request.send();
-
-
-        //afficher l'image
-        //    <img ng-src="data:image/*;base64,{{Raw Binary Data}}"/>
-
-        this.setState({ snap_showing: true })
+        this.setState({ snap_showing: true, imagedata: url, timeleft: duration })
+        this.setIntervalShow()
         const timer = setTimeout(() => {
-          console.log('This will run after 1 second!')
-          this.setState({ snap_showing: false, imagedata: res.data })
-        }, duration * 1000);
-        return () => clearTimeout(timer);
+          this.setState({ snap_showing: false })
+          this.showSeen(snap_id)
+        }, duration * 1000)
+        return () => {
+          clearTimeout(timer)
+        }
       })
       .catch(async err => {
-        //disconnect user
-        // dispatch()
         toast.error('Error getting this snap')
-        console.log(err)
-        // await this.setState({ snap_showing: false })
       })
+  }
+
+  setIntervalShow = () => {
+    const interval = setInterval(() => {
+      this.setState({ timeleft: (this.state.timeleft - 1) })
+    }, 1000)
+    return () => {
+      clearInterval(interval)
+    }
   }
 
 
   showSeen = (id) => {
+    console.log("hello")
     const config = {
       headers: {
         "Content-Type": "application/json",
@@ -140,12 +132,11 @@ class Profile extends React.Component {
 
     axios.post('http://snapi.epitech.eu/seen', body, config)
       .then(res => {
-        console.log(res)
         toast.success(res.data.data)
+        this.getAll()
       })
       .catch(err => {
         toast.error('didnt mark as seen')
-        console.log(err)
       })
   }
 
@@ -196,7 +187,10 @@ class Profile extends React.Component {
                 >Local</button>
               </div>
           :
-          <img src={this.state.imagedata} />
+          <>
+            <button>{this.state.timeleft}</button>
+            <img src={this.state.imagedata} />
+          </>
         }
       </>
     )
