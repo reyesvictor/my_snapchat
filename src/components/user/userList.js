@@ -5,7 +5,9 @@ import { BrowserRouter as Router } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import store from '../../store'
+import { Button } from 'reactstrap'
 import axios from 'axios'
+import { toast } from 'react-toastify';
 
 // import { loadUser } from '../actions/authActions'
 
@@ -56,9 +58,6 @@ class userList extends React.Component {
   }
 
   onSend = (email) => {
-
-    console.log(email)
-
     const config = {
       headers: {
         "Content-Type": "multipart/form-data",
@@ -66,16 +65,38 @@ class userList extends React.Component {
       }
     }
 
-    const body = {
-      "duration": 5,
-      "to": email,
-      "image": this.props.dataUri
+    //Convertir image to send to API
+    const body = new FormData();
+    body.append('duration', this.state.seconds)
+    body.append('to', email);
+    if (typeof this.props.dataUri == 'string') {
+      body.append('image', this.dataURLtoFile(this.props.dataUri, 'snap.jpg'))
+    } else {
+      body.append('image', this.props.dataUri)
     }
+
+    console.log(this.props.dataUri)
 
     axios.post('http://snapi.epitech.eu/snap', body, config)
       .then(res => {
-        this.setState({ users: res.data.data, userResult: res.data.data })
+        toast.success(res.data.data)
       })
+      .catch(err => {
+        console.log(err)
+      })
+  }
+
+  dataURLtoFile = (dataurl, filename) => {
+    var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
+      bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
+    while (n--) {
+      u8arr[n] = bstr.charCodeAt(n);
+    }
+    return new File([u8arr], filename, { type: mime });
+  }
+
+  refreshPage = () => {
+    window.location.reload(false);
   }
 
   render() {
@@ -83,6 +104,14 @@ class userList extends React.Component {
     const { user, isAuthenticated, isLoading } = this.props.auth
     return (
       <>
+        <Button onClick={this.refreshPage} 
+        style={{ 
+          position:'fixed', 
+          bottom: 5,
+          right: 45 + 'vw', 
+          opacity: 0.5
+         }}
+        >&times;</Button>
         <div>
           <Label for="duration">Duration</Label>
           <select id="duration" onChange={this.handleChange}>
@@ -101,7 +130,6 @@ class userList extends React.Component {
           placeholder="Send to..."
           onChange={this.onChange}
         />
-
         {this.state.userResult.map(({ email }) =>
           <>
             <hr key={email + 'hr'} />
