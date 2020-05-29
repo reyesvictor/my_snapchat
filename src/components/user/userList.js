@@ -1,11 +1,10 @@
 import React from 'react';
 import { Provider } from 'react-redux'
-import { Container, Input, Label } from 'reactstrap'
+import { Container, Input, Label, Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap'
 import { BrowserRouter as Router } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import store from '../../store'
-import Axios from 'axios';
 import axios from 'axios'
 
 // import { loadUser } from '../actions/authActions'
@@ -16,6 +15,7 @@ class userList extends React.Component {
     users: [],
     userResult: [],
     userSearch: '',
+    seconds: 5
   }
 
   componentDidMount() {
@@ -49,7 +49,13 @@ class userList extends React.Component {
     auth: PropTypes.object.isRequired
   }
 
-  onSend = (email) => {    
+  handleChange = (e) => {
+    this.setState({
+      seconds: !e.target.value
+    })
+  }
+
+  onSend = (email) => {
 
     console.log(email)
 
@@ -77,7 +83,16 @@ class userList extends React.Component {
     const { user, isAuthenticated, isLoading } = this.props.auth
     return (
       <>
-
+        <div>
+          <Label for="duration">Duration</Label>
+          <select id="duration" onChange={this.handleChange}>
+            <option value="5">5</option>
+            <option value="7">7</option>
+            <option value="10">10</option>
+            <option value="12">12</option>
+            <option value="15">15</option>
+          </select>
+        </div>
         <Label for="username">Find a user</Label>
         <Input
           type="text"
@@ -90,10 +105,9 @@ class userList extends React.Component {
         {this.state.userResult.map(({ email }) =>
           <>
             <hr key={email + 'hr'} />
-            {/* Choose user */}
             <Container
               value={email}
-              onClick={ e => this.onSend(e.target.innerHTML) }>{email}</Container>
+              onClick={e => this.onSend(e.target.innerHTML)}>{email}</Container>
           </>
         )}
       </>

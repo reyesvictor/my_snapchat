@@ -25,34 +25,16 @@ class PickFile extends React.Component {
     }
 
     getDataUrl = (files) => {
-        // // Create canvas
-        // const canvas = document.createElement('canvas')
-        // const ctx = canvas.getContext('2d')
-        // // Set width and height
-        // canvas.width = img.width
-        // canvas.height = img.height
-        // // Draw the image
-        // ctx.drawImage(img, 0, 0)
-        // return canvas.toDataURL('image/jpeg')
-        var reader = new FileReader()
+        let reader = new FileReader()
         reader.onload = function (event) {
-            var img = new Image()
+            let img = new Image()
             img.onload = function () {
-                // return img.currentSrc 
-                // // console.log(img.currentSrc)
                 document.getElementById('image-preview').appendChild(img)
             }
             img.src = event.target.result
         }
         reader.readAsDataURL(files)
     }
-
-    // Select the image
-    // const img = document.querySelector('#my-image')
-    // img.addEventListener('load', function (event) {
-    //     const dataUrl = getDataUrl(event.currentTarget)
-    //     console.log(dataUrl)
-    // })
 
     render() {
         const { user, isAuthenticated, isLoading } = this.props.auth
@@ -74,10 +56,7 @@ class PickFile extends React.Component {
                                     position: 'relative'
                                 }}
                             >
-                                <ImagePreview dataUri={this.getDataUrl(this.state.file)}
-                                // isFullscreen={isFullscreen}
-                                // isFullscreen={true}
-                                />
+                                <ImagePreview dataUri={this.getDataUrl(this.state.file)} />
                             </div>
                             <UserList dataUri={this.state.file} />
                         </>

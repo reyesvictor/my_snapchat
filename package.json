@@ -9,16 +9,19 @@
     "axios": "^0.19.2",
     "bootstrap": "^4.5.0",
     "file-loader": "^6.0.0",
+    "rc-slider": "^9.2.4",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-html5-camera-photo": "^1.5.4",
     "react-redux": "^7.2.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.1",
+    "react-slider": "^1.0.7",
     "react-toastify": "^6.0.5",
     "reactstrap": "^8.4.1",
     "redux": "^4.0.5",
-    "redux-thunk": "^2.3.0"
+    "redux-thunk": "^2.3.0",
+    "rsuite": "^4.7.1"
   },
   "scripts": {
     "start": "react-scripts start",
