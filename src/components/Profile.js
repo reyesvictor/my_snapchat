@@ -34,6 +34,11 @@ class Profile extends React.Component {
     store.dispatch(loadUser())
     toast.dismiss()
     this.camError()
+
+    const getAll = setInterval(() => {
+      this.getAll()
+    }, 1000)
+    return () => getAll
   }
 
   getAll = () => {
@@ -92,9 +97,7 @@ class Profile extends React.Component {
     })
       .then((response) => response.blob())
       .then((blob) => {
-
         const url = window.URL.createObjectURL(new Blob([blob]))
-
         this.setState({ snap_showing: true, imagedata: url, timeleft: duration })
         this.setIntervalShow()
         const timer = setTimeout(() => {
@@ -110,18 +113,20 @@ class Profile extends React.Component {
       })
   }
 
-  setIntervalShow = () => {
-    const interval = setInterval(() => {
-      this.setState({ timeleft: (this.state.timeleft - 1) })
+  setIntervalShow = async () => {
+    const interval = await setInterval(async () => {
+      let timeleft = this.state.timeleft
+      if (this.state.timeleft > 0) {
+        await this.setState({ timeleft: (timeleft - 1) })
+      } else {
+        clearInterval(interval)
+        return
+      }
     }, 1000)
-    return () => {
-      clearInterval(interval)
-    }
+    return () => interval
   }
 
-
   showSeen = (id) => {
-    console.log("hello")
     const config = {
       headers: {
         "Content-Type": "application/json",
@@ -169,6 +174,14 @@ class Profile extends React.Component {
                     <hr />
                   </>
                 })}
+
+                <button style={{
+                  bottom: 1,
+                  right: 1,
+                }}
+                  onClick={this.local}
+                >Local</button>
+
                 <button style={{
                   borderRadius: 100 + '%',
                   // position: 'fixed',
@@ -178,13 +191,7 @@ class Profile extends React.Component {
                   onClick={this.cam}
                 >O</button>
 
-                <button style={{
-                  borderRadius: 100 + '%',
-                  bottom: 1,
-                  right: 1,
-                }}
-                  onClick={this.local}
-                >Local</button>
+
               </div>
           :
           <>
