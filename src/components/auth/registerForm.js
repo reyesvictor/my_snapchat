@@ -6,20 +6,24 @@ import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import { register } from '../../actions/authActions'
 import { clearErrors } from '../../actions/errorActions'
+import { ToastContainer, toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.min.css'
 
 class RegisterModal extends Component {
     state = {
         modal: false,
         email: '',
         password: '',
-        msg: null
+        msg: null,
+        modalsuccess: 1,
     }
 
     static propTypes = {
         isAuthenticated: PropTypes.bool,
         error: PropTypes.object.isRequired,
         register: PropTypes.func.isRequired,
-        clearErrors: PropTypes.func.isRequired
+        clearErrors: PropTypes.func.isRequired,
+        registered: PropTypes.bool,
     }
 
     // once the component updates, it's gonna check for errors so it can display them
@@ -37,12 +41,15 @@ class RegisterModal extends Component {
         }
 
         // if the modal is open , AKA this.state.modal is true, AND if the user is authenticated which means he has a token, then close the modal because the user successfully registered
+        console.log('ModalState',this.state.modal)
         if (this.state.modal) {
+            console.log(this.state.modal)
+            // console.log(error, error.msg)
             if (isAuthenticated) {
                 this.toggle()
             }
         }
-    }
+    }   
 
     toggle = () => {
         this.props.clearErrors()
@@ -55,7 +62,7 @@ class RegisterModal extends Component {
         this.setState({ [e.target.name]: e.target.value })
     }
 
-    onSubmit = e => {
+    onSubmit = async e => {
         e.preventDefault()
 
         const { email, password } = this.state
@@ -67,12 +74,20 @@ class RegisterModal extends Component {
         }
 
         // gonna try and register
-        this.props.register(user)
+        await this.props.register(user)
+
     }
 
     render() {
+        // console.log(this.props, this.props.registered)
+        if (this.props.registered && this.state.modalsuccess === 1 ) {
+            let count = this.state.modalsuccess + 1
+            this.setState({modalsuccess:  count})
+            toast.success('You are now a member ! Please log in.')
+        }
         return (
             <div>
+                <ToastContainer />
                 <NavLink
                     style={{
                         background: '#1b94f6',
@@ -88,7 +103,7 @@ class RegisterModal extends Component {
                     onClick={this.toggle} href="#">
                     SIGN UP
                 </NavLink>
-                <Modal isOpen={this.state.modal} toggle={this.toggle}>
+                <Modal isOpen={this.props.registered ? null : this.state.modal } toggle={this.toggle}>
                     <ModalHeader toggle={this.toggle}>Register!</ModalHeader>
                     <ModalBody>
                         {this.state.msg ? <Alert> {this.state.msg}</Alert> : null}
@@ -124,7 +139,8 @@ class RegisterModal extends Component {
 
 const mapStateToProps = state => ({
     isAuthenticated: state.auth.isAuthenticated,
-    error: state.error
+    error: state.error,
+    registered: state.auth.registered,
 })
 
 export default connect(

@@ -104,40 +104,53 @@ class userList extends React.Component {
     const { user, isAuthenticated, isLoading } = this.props.auth
     return (
       <>
-        <Button onClick={this.refreshPage} 
-        style={{ 
-          position:'fixed', 
-          bottom: 5,
-          right: 45 + 'vw', 
-          opacity: 0.5
-         }}
-        >&times;</Button>
-        <div>
-          <Label for="duration">Duration</Label>
-          <select id="duration" onChange={this.handleChange}>
-            <option value="5">5</option>
-            <option value="7">7</option>
-            <option value="10">10</option>
-            <option value="12">12</option>
-            <option value="15">15</option>
-          </select>
+        <div
+          style={{
+            background: '#282c34',
+            color: '#e7eee0',
+            fontSize: 2.5 + 'vh',
+          }}>
+
+          <div>
+            <Label for="duration">Duration</Label>
+            <select id="duration" className="selectpicker" onChange={this.handleChange}
+              style={{
+                width: 15 + 'vw',
+                borderRadius: 1 + 'vw',
+                marginLeft: 3 + 'vw',
+              }}>
+              <option value="5">5</option>
+              <option value="7">7</option>
+              <option value="10">10</option>
+              <option value="12">12</option>
+              <option value="15">15</option>
+            </select>
+          </div>
+          <Label for="username">Find a user</Label>
+          <Input
+            type="text"
+            name="userSearch"
+            id="userSearch"
+            placeholder="Send to..."
+            onChange={this.onChange}
+          />
+          {this.state.userResult.map(({ email }) =>
+            <>
+              <hr key={email + 'hr'} />
+              <Container
+                value={email}
+                onClick={e => this.onSend(e.target.innerHTML)}>{email}</Container>
+            </>
+          )}
         </div>
-        <Label for="username">Find a user</Label>
-        <Input
-          type="text"
-          name="userSearch"
-          id="userSearch"
-          placeholder="Send to..."
-          onChange={this.onChange}
-        />
-        {this.state.userResult.map(({ email }) =>
-          <>
-            <hr key={email + 'hr'} />
-            <Container
-              value={email}
-              onClick={e => this.onSend(e.target.innerHTML)}>{email}</Container>
-          </>
-        )}
+        <Button onClick={this.refreshPage}
+          style={{
+            position: 'fixed',
+            bottom: 5,
+            right: 45 + 'vw',
+            opacity: 0.5
+          }}
+        >&times;</Button>{' '}
       </>
     )
   }

@@ -5,18 +5,25 @@ import { NavLink } from 'reactstrap'
 import PropTypes from 'prop-types'
 
 export class Logout extends Component {
-    
+
     static propTypes = {
         logout: PropTypes.func.isRequired
     }
-    
+
     //CSS TIME
 
 
     render() {
         return (
             <Fragment key="logoutmodal">
-                <NavLink onClick={this.props.logout} href="#">
+                <NavLink
+                    className="btn btn-danger"
+                    style={{
+                        position: 'fixed',
+                        left: 3 +  'vw',
+                        marginTop: 1 +  'vw',
+                    }}
+                    onClick={this.props.logout} href="#">
                     Logout
                 </NavLink>
             </Fragment>

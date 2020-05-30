@@ -150,6 +150,7 @@ class Profile extends React.Component {
     return (
       <>
         <ToastContainer />
+        <div style={{ height: 100 + 'vh', background:'#282c34' }}>
         {!this.state.snap_showing ?
           this.state.local ?
             <Local />
@@ -159,38 +160,91 @@ class Profile extends React.Component {
               :
               <div
                 style={{
-                  background: 'white',
+                  background: '#282c34',
                   height: 100 + 'vh',
+                  color: '#e7eee0',
+                  fontSize: 2.5 + 'vh',
                 }}>
-                <Logout />
-                <hr />
+
+
+                <div
+                  style={{
+                    display: 'block',
+                    textAlign: 'center',
+                    justifyContent: 'center',
+                    padding: 2 + 'vw',
+                    background: 'beige',
+                    color: 'black',
+                  }}
+                >
+                  App by Antonio Tina and Victor Reyes
+                </div>
+
+                <div
+                  style={{
+                    display: 'block',
+                    textAlign: 'center',
+                    justifyContent: 'center',
+                    padding: 2 + 'vw',
+                    background: '#282c34',
+                  }}
+                >
+                  {this.state.snaps.length ? `You received ${this.state.snaps.length} snaps !` : ` You didn't receive anything yet !`}
+
+                </div>
+
+                <hr id="firsthr" style={{ marginTop: 0, background: 'white', color: 'white' }} />
+                {this.state.snaps.length ? null : <img style={{ width: 100 + 'vw', marginTop: 15 + 'vh' }} src='https://media1.tenor.com/images/d5d2b8703922df9d25da6aded6eaf2f3/tenor.gif' alt="Image No Snaps"/>}
                 {this.state.snaps.map(snap => {
                   return <>
                     <div
                       onClick={e => this.showSnap(e)}
                       value={snap.snap_id}
-                      style={{ height: 2 + '%' }}
-                    >===> {snap.from}</div>
-                    <hr />
+                      style={{
+                        height: 'auto',
+                        paddingLeft: 5 + 'vw',
+                        marginTop: 2 + 'vh',
+                        marginBottom: 2 + 'vh',
+                      }}
+                    >&#128548; {snap.from}</div>
+                    <hr style={{ marginBottom: 1 + 'vh', background: 'grey' }} />
                   </>
                 })}
 
-                <button style={{
-                  bottom: 1,
-                  right: 1,
-                }}
-                  onClick={this.local}
-                >Local</button>
+                <div
+                  className="d-flex flex-row"
+                  style={{
+                    position: 'absolute',
+                    bottom: 3 + 'vh',
+                    right: 35 + 'vw',
+                  }}
+                >
 
-                <button style={{
-                  borderRadius: 100 + '%',
-                  // position: 'fixed',
-                  bottom: 1,
-                  right: 1,
-                }}
-                  onClick={this.cam}
-                >O</button>
+                  <Logout />
 
+                  <button style={{
+                    borderRadius: 100 + '%',
+                    width: 50 + 'px',
+                    height: 50 + 'px',
+                    marginRight: 5 + 'vw',
+                  }}
+                    onClick={this.local}
+                    className="btn btn-success"
+                  >&#128193;</button>
+
+                  <button
+                    className="btn btn-info"
+                    style={{
+                      borderRadius: 100 + '%',
+                      width: 50 + 'px',
+                      height: 50 + 'px',
+                      // position: 'fixed',
+                    }}
+                    onClick={this.cam}
+                  >&#128247;</button>
+
+
+                </div>
 
               </div>
           :
@@ -199,6 +253,7 @@ class Profile extends React.Component {
             <img src={this.state.imagedata} />
           </>
         }
+        </div>
       </>
     )
   }
