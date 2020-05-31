@@ -41,9 +41,9 @@ class RegisterModal extends Component {
         }
 
         // if the modal is open , AKA this.state.modal is true, AND if the user is authenticated which means he has a token, then close the modal because the user successfully registered
-        console.log('ModalState',this.state.modal)
+        // console.log('ModalState',this.state.modal)
         if (this.state.modal) {
-            console.log(this.state.modal)
+            // console.log(this.state.modal)
             // console.log(error, error.msg)
             if (isAuthenticated) {
                 this.toggle()

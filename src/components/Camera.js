@@ -11,7 +11,7 @@ function Cam(props) {
   const [camError, setCamError] = useState('')
 
   function handleTakePhotoAnimationDone(dataUri) {
-    console.log('takePhoto')
+    // console.log('takePhoto')
     setDataUri(dataUri)
   }
 

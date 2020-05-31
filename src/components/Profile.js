@@ -54,7 +54,7 @@ class Profile extends React.Component {
       })
       .catch(err => {
         toast.error('Error getting all snaps')
-        console.log(err)
+        // console.log(err)
       })
   }
 
@@ -86,7 +86,7 @@ class Profile extends React.Component {
     const snap_id = e.target.getAttribute('value')
 
     const duration = this.state.snaps.filter(snap => snap.snap_id == snap_id)[0].duration
-    console.log('duration', duration)
+    // console.log('duration', duration)
 
     fetch(`http://snapi.epitech.eu/snap/${snap_id}`, {
       method: 'GET',

@@ -31,13 +31,13 @@ export const loadUser = () => (dispatch, getState) => {
             // res.data is an object with user object and the token
             payload: JSON.parse(localStorage.getItem('auth'))
         })
-        console.log("The token exists")
+        // console.log("The token exists")
     }
     else {
         dispatch({
             type: AUTH_ERROR
         })
-        console.log("The token does not exist")
+        // console.log("The token does not exist")
     }
     // if token and email are in the state, it means the user has already logged in
     // if (token in state)

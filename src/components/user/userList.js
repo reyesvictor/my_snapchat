@@ -17,11 +17,11 @@ class userList extends React.Component {
     users: [],
     userResult: [],
     userSearch: '',
-    seconds: 5
+    seconds: 0
   }
 
   componentDidMount() {
-    console.log(this.props)
+    // console.log(this.props)
 
     //get user list from API
     const config = {
@@ -52,8 +52,9 @@ class userList extends React.Component {
   }
 
   handleChange = (e) => {
+    // console.log(e.target.value)
     this.setState({
-      seconds: !e.target.value
+      seconds: e.target.value
     })
   }
 
@@ -67,6 +68,7 @@ class userList extends React.Component {
 
     //Convertir image to send to API
     const body = new FormData();
+    // console.log("the number of seconds: ",this.state.seconds)
     body.append('duration', this.state.seconds)
     body.append('to', email);
     if (typeof this.props.dataUri == 'string') {
@@ -75,14 +77,14 @@ class userList extends React.Component {
       body.append('image', this.props.dataUri)
     }
 
-    console.log(this.props.dataUri)
+    // console.log(this.props.dataUri)
 
     axios.post('http://snapi.epitech.eu/snap', body, config)
       .then(res => {
         toast.success(res.data.data)
       })
       .catch(err => {
-        console.log(err)
+        // console.log(err)
       })
   }
 
@@ -134,6 +136,7 @@ class userList extends React.Component {
             placeholder="Send to..."
             onChange={this.onChange}
           />
+          <small>This list is public. We are not responsible for the profanities written in them.</small>
           {this.state.userResult.map(({ email }) =>
             <>
               <hr key={email + 'hr'} />

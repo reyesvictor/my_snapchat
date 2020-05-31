@@ -24,7 +24,7 @@ class PickFile extends React.Component {
         await this.setState({
             file: e.target.files[0]
         })
-        console.log(this.state.file)
+        // console.log(this.state.file)
     }
 
     getDataUrl = (files) => {
